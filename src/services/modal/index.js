@@ -31,7 +31,11 @@ class ModalManager {
     let theme = options && options.theme
     let destroyOnHide = options && options.destroyOnHide
     let onHide = options && options.onHide
+    //2017-05-12 给模态对话框传递数据
+    let modalData = options && options.modalData;
     let modalId = 'modal_' + Math.random().toString(36).substr(3, 6)
+    //把模板Id传入，方便找到模板
+    modalData.modalId = modalId;
     createElement(modalId)
     let ModalComponent = Vue.extend(Modal)
     let modal = new ModalComponent({
@@ -45,7 +49,13 @@ class ModalManager {
     modal.$mount(`[${modalId}]`)
 
     let ContentComponent = Vue.extend(com)
-    let content = new ContentComponent()
+    //let content = new ContentComponent()
+    //2017-05-12 给模态对话框传递数据
+    let content = new ContentComponent({
+      propsData:{
+        modalData: modalData || {}
+      }
+    })
     content.$mount(modal.$el.querySelector('[von-modal-content]'))
 
     modal.id = modalId
